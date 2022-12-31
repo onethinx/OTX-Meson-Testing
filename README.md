@@ -1,8 +1,8 @@
-# Onethinx_Creator_HelloWorld
-This basic example shows how to send a "Hello World" text over LoRaWAN.
+# Onethinx_OTX_Meson_Test_Project
+This example is used for evaluating the Meson / Ninja build system for the Onethinx OTX-18 or PSoC6
 ## Description
-The red LED will flash with the rate defined in the PSoC Creator project.
-The blue LED will first be on during the join procedure.
-If successfully joined, the blue LED will turn off for one second. 
-A loop where the char-values of 'Hello World' will be sent every 10s is then entered.
-If not joined -this may take a long while-, the blue LED will blink fast forever.
+### Prerequisites:
+  - Windows:
+    - Install Meson & Ninja with the MSI installer from: [meson-1.0.0-64.msi
+](https://github.com/mesonbuild/meson/releases)
+- VS Code Extension: Meson / mesonbuild
