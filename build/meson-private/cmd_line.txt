@@ -1,0 +1,6 @@
+[options]
+backend = ninja
+
+[properties]
+cross_file = ['/Volumes/Data/VScode/meson_test/cross_gcc.build']
+
