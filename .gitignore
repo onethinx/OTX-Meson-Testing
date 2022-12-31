@@ -2,7 +2,6 @@
 cmake-build*./**
 **/local\.cmake
 **/\.idea
-**/build/**
 !compile_commands.json
 !*.hex
 !*.elf

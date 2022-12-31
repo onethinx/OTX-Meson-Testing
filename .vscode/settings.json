@@ -4,18 +4,18 @@
     "ego.power-tools": {
         "commands": {
           "otx.preLaunch": {
-            "script": "/Volumes/Data/VScode/meson_test/.vscode/otxC.js",
+            "script": "${workspaceRoot}/.vscode/otxC.js",
           },
           "otx.clean": {
-            "script": "/Volumes/Data/VScode/meson_test/.vscode/otxC.js",
+            "script": "${workspaceRoot}/.vscode/otxC.js",
             "button": { "text": "$(references) Clean" },
           },
           "otx.build": {
-            "script": "/Volumes/Data/VScode/meson_test/.vscode/otxC.js",
+            "script": "${workspaceRoot}/.vscode/otxC.js",
             "button": { "text": "$(file-binary) Build" },
           },
           "otx.run": {
-            "script": "/Volumes/Data/VScode/meson_test/.vscode/otxC.js",
+            "script": "${workspaceRoot}/.vscode/otxC.js",
             "button": { "text": "$(debug-start) Build-and-Launch" },
           }
         }
