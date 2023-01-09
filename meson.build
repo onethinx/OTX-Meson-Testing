@@ -17,17 +17,23 @@ c_args        = []
 link_args     = []
 link_deps     = []
 
-PROJECTNAME =  meson.current_source_dir().split('/').get(-1)
 
-cmd = run_command('sh', '-c', 'echo $ONETHINX_PACK_LOC', check: true)
-ONETHINX_PACK_LOC = cmd.stdout().strip()
-cmd = run_command('sh', '-c', 'echo $ONETHINX_TOOLS_LOC', check: true)
-ONETHINX_TOOLS_LOC = cmd.stdout().strip()
+if build_machine.system() == 'windows'
+	PROJECTNAME =  meson.current_source_dir().split('\\').get(-1)
+	ONETHINX_PACK_LOC = run_command('cmd', '/C', 'echo %ONETHINX_PACK_LOC%', check: true).stdout().strip()
+	ONETHINX_TOOLS_LOC = run_command('cmd', '/C', 'echo %ONETHINX_TOOLS_LOC%', check: true).stdout().strip()
+else
+	PROJECTNAME =  meson.current_source_dir().split('/').get(-1)
+	ONETHINX_PACK_LOC = run_command('sh', '-c', 'echo $ONETHINX_PACK_LOC', check: true).stdout().strip()
+	ONETHINX_TOOLS_LOC = run_command('sh', '-c', 'echo $ONETHINX_TOOLS_LOC', check: true).stdout().strip()
+endif
+
 CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
 
 MESON_SOURCE_LOC = meson.current_source_dir()
 CREATOR_DIR = 'Onethinx_Creator.cydsn'
 
+message(build_machine.system())
 
 c_args     += [
 	'-g',
@@ -65,8 +71,8 @@ link_args     = [
 
 incdirs       = [
 # OTX_Extension_HeaderFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
-	'source/OnethinxCore',
 	'source',
+	'source/OnethinxCore',
 # OTX_Extension_HeaderFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
 # CoreStripper_IncludeHeaderDirs_Start - automatic insert of include header dirs by CoreStripper. Do not edit below this line
 	'Onethinx_Creator.cydsn/',
@@ -99,8 +105,8 @@ sourcefiles       = [
 	'Onethinx_Creator.cydsn/gcc/startup_psoc6_01_cm4.S',
 	'Onethinx_Creator.cydsn/system_psoc6_cm4.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
-	'source/OnethinxCore/OnethinxCore01.c',
 	'source/main.c',
+	'source/OnethinxCore/OnethinxCore01.c',
 # OTX_Extension_SourceFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
 # CoreStripper_SourceFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_cfg.c',
@@ -145,7 +151,7 @@ size     = find_program('arm-none-eabi-size').path()
 gdb      = find_program('arm-none-eabi-gdb').path()
 cymcuelftool = find_program(ONETHINX_TOOLS_LOC + '/cymcuelftool-1.0/bin/cymcuelftool').path()
 readelf  = find_program('arm-none-eabi-readelf').path()
-memcalc = find_program(CONFIG_DIR + '/scripts/memcalc.bash').path()
+memcalc = find_program(CONFIG_DIR + '/scripts/memcalc').path()
 
 #==============================================================================#
 
@@ -157,30 +163,17 @@ signed = custom_target(
     command          : [cymcuelftool, '--sign',  PROJECTNAME + '.elf', '--output', PROJECTNAME + '_signed.elf', '--hex', PROJECTNAME + '.hex'],
     depends          : [main])
 	
-readelfout = custom_target(
-                        PROJECTNAME + '.readelf',
-    output           :  [PROJECTNAME + '.readelf'],
-    build_by_default : true,
-    command          : [readelf, '-Sl', PROJECTNAME + '.elf'],
-	capture			 : true,
-    depends          : [main])
 
 mainout = custom_target(
-                        PROJECTNAME + '.readelf.txt',
-    output           :  [PROJECTNAME + '.readelf.txt'],
+                        PROJECTNAME + '.memcalc.txt',
+    output           :  [PROJECTNAME + '.memcalc.txt'],
     build_by_default : true,
-    command          : [memcalc, PROJECTNAME + '.readelf', '917504', '229376', '268435456', '134217728'],  #Flash 0x0e0000   SRAM 0x38000   Flash start 0x10000000   SRAM start 0x08000000
-    depends          : [readelfout, main])
+	console			 : true,
+    command          : [memcalc, readelf, PROJECTNAME + '.elf', '0x0e0000', '0x38000', '0x10000000', '0x08000000', PROJECTNAME + '.memcalc.txt'],  #Flash 0x0e0000   SRAM 0x38000   Flash start 0x10000000   SRAM start 0x08000000
+   # command          : [memcalc, PROJECTNAME + '.readelf', '0x0e0000', '0x38000', '0x10000000', '0x08000000', PROJECTNAME + '.memcalc2.txt'],  #Flash 0x0e0000   SRAM 0x38000   Flash start 0x10000000   SRAM start 0x08000000
+    depends          : [main])
 
-# custom_target(
-#     ${PROJECT_NAME} ALL
-#     #POST BUILD
-#     COMMAND "${CYPRESS_ELF_TOOL}" --sign "${PROJECT_NAME}.elf" --output "${PROJECT_NAME}_signed.elf" --hex "${PROJECT_NAME}.hex"
-#     COMMAND echo "------- Memory usage -------"
-#     COMMAND "${READELF_TOOL}" -Sl ${PROJECT_NAME}.elf > ${PROJECT_NAME}.readelf
-#     COMMAND "${BASH_TOOL}" ${CONFIG_DIR}/scripts/memcalc.bash ${PROJECT_NAME}.readelf "917504" "229376" "268435456" "134217728"  #Flash 0x0e0000   SRAM 0x38000   Flash start 0x10000000   SRAM start 0x08000000
-#     DEPENDS "${PROJECT_NAME}.elf"
-# )
+
 
 # create custom target : create binary, hex dump, size and disassemble dump
 # mainbin = custom_target(

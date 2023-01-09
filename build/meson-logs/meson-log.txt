@@ -1,11 +1,11 @@
-Build started at 2022-12-30T22:24:14.334609
+Build started at 2023-01-04T16:39:39.441508
 Main binary: /opt/local/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10
-Build Options: -Dbackend=ninja '--cross-file /Volumes/Data/VScode/meson_test/cross_gcc.build'
+Build Options: -Dbackend=ninja '--cross-file /Volumes/Data/VScode/GIT/OTX-Meson-Testing/cross_gcc.build'
 Python system: Darwin
 The Meson build system
 Version: 0.63.3
-Source dir: /Volumes/Data/VScode/meson_test
-Build dir: /Volumes/Data/VScode/meson_test/build
+Source dir: /Volumes/Data/VScode/GIT/OTX-Meson-Testing
+Build dir: /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build
 Build type: cross build
 Project name: meson_test
 Project version: 0.1
@@ -33,25 +33,26 @@ Running command: /bin/sh -c echo $ONETHINX_TOOLS_LOC
 --- stderr ---
 
 
+Message: darwin
 Program arm-none-eabi-objcopy found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objcopy)
 Program arm-none-eabi-objdump found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objdump)
 Program arm-none-eabi-size found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-size)
 Program arm-none-eabi-gdb found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb)
 Program /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0/cymcuelftool-1.0/bin/cymcuelftool found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0/cymcuelftool-1.0/bin/cymcuelftool)
 Program arm-none-eabi-readelf found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-readelf)
-Program /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/config/scripts/memcalc.bash found: YES (/bin/bash /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/config/scripts/memcalc.bash)
-Build targets in project: 4
+Program /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/config/scripts/memcalc found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/config/scripts/memcalc)
+Build targets in project: 3
 
 meson_test 0.1
 
   User defined options
-    Cross files: /Volumes/Data/VScode/meson_test/cross_gcc.build
+    Cross files: /Volumes/Data/VScode/GIT/OTX-Meson-Testing/cross_gcc.build
     backend    : ninja
 
 Found ninja-1.11.1 at /opt/local/bin/ninja
 Running compile:
-Working directory:  /Volumes/Data/VScode/meson_test/build/meson-private/tmpllbm6um2
-Command line:  arm-none-eabi-gcc -I/usr/local/opt/ruby/include /Volumes/Data/VScode/meson_test/build/meson-private/tmpllbm6um2/testfile.c -o /Volumes/Data/VScode/meson_test/build/meson-private/tmpllbm6um2/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+Working directory:  /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpxzdq3ng2
+Command line:  arm-none-eabi-gcc -I/usr/local/opt/ruby/include /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpxzdq3ng2/testfile.c -o /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpxzdq3ng2/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
 
 Code:
  

@@ -54,16 +54,17 @@ otxClean = async (vscode) => {
 
 otxBuild = async (vscode) => {
     if(vscode.workspace.workspaceFolders !== undefined) {
-        basePath = vscode.workspace.workspaceFolders[0].uri.path;
+        basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
         let sourcePath = path.join(basePath, "source");
         const mesonBuildFile = path.join(basePath, "meson.build");
         if (fs.existsSync(mesonBuildFile))
         {
-            var headerContents = readDirectory(sourcePath, '.h', true);
-            var sourceContents = readDirectory(sourcePath, '.c', false);
+            var headerContents = readDirectory([], sourcePath, '.h', true);
+            var sourceContents = readDirectory([], sourcePath, '.c', false);
 
             updateMeson(mesonBuildFile, headerContents, sourceContents);
             var ret = await vscode.commands.executeCommand("mesonbuild.build", "");
+            return '';
           //  if (ret == 0) 
             {
                  vscode.commands.executeCommand('workbench.panel.output.focus', 'Adapter Output');
@@ -121,10 +122,7 @@ otxRun = async (vscode) => {
 const fs = require("fs");
 const path = require("path");
 
-var readDirOutput = [];
 var basePath = "";
-
-
 
 function writeFile(fileName, contents)
 {
@@ -133,28 +131,29 @@ function writeFile(fileName, contents)
     })
 }
 
-function readDirectory(dir, extension, foldersOnly) {
-	readDirOutput = [];
-	read_directory(dir, extension, foldersOnly);
-	return readDirOutput;
-}
 
-function read_directory(dir, extension, foldersOnly) {
+
+function readDirectory(refArray, dir, extension, foldersOnly) {
 	var pushed = false;
 	fs.readdirSync(dir).forEach(file => {
 		let current = path.join(dir,file);
 		if (fs.statSync(current).isFile()) {
 			if(current.endsWith(extension)) {
 				if (foldersOnly) {
-					if (!pushed) readDirOutput.push('\t\'' + path.relative(basePath, dir) + '\',');
+                    var fle = path.relative(basePath, dir).replaceAll('\\', '/');
+					if (!pushed) refArray.push('\t\'' + fle + '\',');
 					pushed = true;
 				}
 				else
-					readDirOutput.push('\t\'' + path.relative(basePath, current) + '\',');
+                {
+                    var fle = path.relative(basePath, current).replaceAll("\\", "/");
+					refArray.push('\t\'' + fle + '\',');
+                }
 			} 
 		} else
-			readDirectory(current, extension, foldersOnly)
+			readDirectory(refArray, current, extension, foldersOnly)
 	});
+    return refArray;
 }
 
 function updateMeson(mesonFile, headerContents, sourceContents) {
