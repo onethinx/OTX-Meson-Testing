@@ -1,27 +1,26 @@
 {
-    "mesonbuild.configureOnOpen": false,
-    "mesonbuild.buildFolder": "build",
-    "ego.power-tools": {
-        "commands": {
-          "otx.preLaunch": {
-            "script": "${workspaceRoot}/.vscode/otxC.js",
-          },
-          "otx.clean": {
-            "script": "${workspaceRoot}/.vscode/otxC.js",
-            "button": { "text": "$(references) Clean" },
-          },
-          "otx.build": {
-            "script": "${workspaceRoot}/.vscode/otxC.js",
-            "button": { "text": "$(file-binary) Build" },
-          },
-          "otx.run": {
-            "script": "${workspaceRoot}/.vscode/otxC.js",
-            "button": { "text": "$(debug-start) Build-and-Launch" },
-          }
-        }
+
+  "ego.power-tools": {
+    "commands": {
+      "otx.preLaunch": {
+        "script": "${workspaceRoot}/.vscode/otxC.js",
       },
-      "files.associations": {
-        "project.h": "c",
-        "new.h": "c"
+      "otx.clean": {
+        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "button": { "text": "$(references) Clean-Reconfigure" },
       },
+      "otx.build": {
+        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "button": { "text": "$(file-binary) Build" },
+      },
+      "otx.run": {
+        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "button": { "text": "$(debug-start) Build-and-Launch" },
+      }
+    }
+  },
+  "files.associations": {
+    "project.h": "c",
+    "new.h": "c"
+  }
 }

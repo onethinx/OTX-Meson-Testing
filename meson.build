@@ -10,13 +10,15 @@ cpu        = 'cortex-m4'
 endian     = 'little'
 
 #==============================================================================#
-# Initialize some globals
+# initialize some globals
 srcs          = []
 incdirs       = []
 c_args        = []
 link_args     = []
 link_deps     = []
 
+#==============================================================================#
+# set directories
 
 if build_machine.system() == 'windows'
 	PROJECTNAME =  meson.current_source_dir().split('\\').get(-1)
@@ -33,7 +35,19 @@ CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
 MESON_SOURCE_LOC = meson.current_source_dir()
 CREATOR_DIR = 'Onethinx_Creator.cydsn'
 
-message(build_machine.system())
+#==============================================================================#
+# import tools
+
+objcopy  		= find_program('arm-none-eabi-objcopy').path()
+objdump  		= find_program('arm-none-eabi-objdump').path()
+size     		= find_program('arm-none-eabi-size').path()
+gdb      		= find_program('arm-none-eabi-gdb').path()
+cymcuelftool 	= find_program(ONETHINX_TOOLS_LOC + '/cymcuelftool-1.0/bin/cymcuelftool').path()
+readelf  		= find_program('arm-none-eabi-readelf').path()
+memcalc 		= find_program(CONFIG_DIR + '/scripts/memcalc').path()
+
+#==============================================================================#
+# setup compile & link arguments
 
 c_args     += [
 	'-g',
@@ -71,8 +85,8 @@ link_args     = [
 
 incdirs       = [
 # OTX_Extension_HeaderFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
-	'source',
 	'source/OnethinxCore',
+	'source',
 # OTX_Extension_HeaderFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
 # CoreStripper_IncludeHeaderDirs_Start - automatic insert of include header dirs by CoreStripper. Do not edit below this line
 	'Onethinx_Creator.cydsn/',
@@ -102,11 +116,11 @@ incdirs       = [
 ]
 
 sourcefiles       = [
-	'Onethinx_Creator.cydsn/gcc/startup_psoc6_01_cm4.S',
-	'Onethinx_Creator.cydsn/system_psoc6_cm4.c',
+	CREATOR_DIR + '/gcc/startup_psoc6_01_cm4.S',
+	CREATOR_DIR + '/system_psoc6_cm4.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
-	'source/main.c',
 	'source/OnethinxCore/OnethinxCore01.c',
+	'source/main.c',
 # OTX_Extension_SourceFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
 # CoreStripper_SourceFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_cfg.c',
@@ -134,6 +148,27 @@ sourcefiles       = [
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/middleware/ble/cy_ble_clk.c',
 # CoreStripper_SourceFiles_End - automatic insert of include source files by CoreStripper. Do not edit above this line
 ]
+
+#==============================================================================#
+# include libraries
+
+cc = meson.get_compiler('c')
+
+# example: include library.a from directory
+#link_deps += declare_dependency( dependencies : cc.find_library('library', dirs : ['directory/libdir']) )
+
+# example: include object.o from directory
+#link_deps += declare_dependency( link_args : ['directory/libdir/object.o'] )
+
+#==============================================================================#
+# run prebuild script 
+
+#prebuild = custom_target('prebuild', output : 'buildversion.h', command : [MESON_SOURCE_LOC+'/config/prebuild.bash']) #use prebuild.bash / prebuild.bat file
+#link_deps += declare_dependency( sources : [prebuild])
+
+#==============================================================================#
+# build executable
+
 main = executable(
             PROJECTNAME,          [sourcefiles],
             name_suffix         : 'elf',
@@ -142,20 +177,9 @@ main = executable(
             dependencies        : link_deps,
             include_directories : [incdirs] )
 
-
 #==============================================================================#
-# import binary objects
-objcopy  = find_program('arm-none-eabi-objcopy').path()
-objdump  = find_program('arm-none-eabi-objdump').path()
-size     = find_program('arm-none-eabi-size').path()
-gdb      = find_program('arm-none-eabi-gdb').path()
-cymcuelftool = find_program(ONETHINX_TOOLS_LOC + '/cymcuelftool-1.0/bin/cymcuelftool').path()
-readelf  = find_program('arm-none-eabi-readelf').path()
-memcalc = find_program(CONFIG_DIR + '/scripts/memcalc').path()
+# run post build
 
-#==============================================================================#
-
-# create custom target : create binary, hex dump, size and disassemble dump
 signed = custom_target(
                         PROJECTNAME + '_signed.elf',
     output           : [PROJECTNAME + '_signed.elf'],
@@ -163,7 +187,6 @@ signed = custom_target(
     command          : [cymcuelftool, '--sign',  PROJECTNAME + '.elf', '--output', PROJECTNAME + '_signed.elf', '--hex', PROJECTNAME + '.hex'],
     depends          : [main])
 	
-
 mainout = custom_target(
                         PROJECTNAME + '.memcalc.txt',
     output           :  [PROJECTNAME + '.memcalc.txt'],
@@ -172,48 +195,3 @@ mainout = custom_target(
     command          : [memcalc, readelf, PROJECTNAME + '.elf', '0x0e0000', '0x38000', '0x10000000', '0x08000000', PROJECTNAME + '.memcalc.txt'],  #Flash 0x0e0000   SRAM 0x38000   Flash start 0x10000000   SRAM start 0x08000000
    # command          : [memcalc, PROJECTNAME + '.readelf', '0x0e0000', '0x38000', '0x10000000', '0x08000000', PROJECTNAME + '.memcalc2.txt'],  #Flash 0x0e0000   SRAM 0x38000   Flash start 0x10000000   SRAM start 0x08000000
     depends          : [main])
-
-
-
-# create custom target : create binary, hex dump, size and disassemble dump
-# mainbin = custom_target(
-#                         'main.bin',
-#     output           : ['main.bin'],
-#     # name_suffix      : 'bin',
-#     build_by_default : true,
-#     command          : [objcopy, '-O', 'binary', 'main.elf', 'main.bin'],
-#     depends          : [main])
-
-# mainhex = custom_target(
-#                             'main.hex',
-#         output           : ['main.hex'],
-#         build_by_default : true,
-#         command          : [objcopy, '-O', 'ihex', 'main.elf', 'main.hex'],
-#         depends          : [main])
-
-# mainsize = custom_target(
-#                           'size',
-#         capture          : true,
-#         output           : ['main.size'],
-#         build_by_default : true,
-#         command          : [size, '--format=berkeley', 'main.elf'],
-#         depends          : [main])
-
-# if meson.get_compiler('c').get_id() == 'clang'
-#     maindump = custom_target(
-#                           'dump',
-#         capture          : true,
-#         output           : 'main.dump',
-#         build_by_default : false,
-#         command          : [objdump, '-triple=@0@-none-eabi'.format(arch), '-disassemble-all', '-S', '-t', 'main.elf'],
-#         depends          : [main])
-
-# elif meson.get_compiler('c').get_id() == 'gcc'
-#   maindump = custom_target(
-#                         'dump',
-#       capture          : true,
-#       output           : 'main.dump',
-#       build_by_default : false,
-#       command          : [objdump, '-D', '-S', '-t', 'main.elf'],
-#       depends          : [main])
-# endif
