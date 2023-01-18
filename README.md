@@ -1,7 +1,6 @@
 # Onethinx_OTX_Meson_Test_Project
 This example is used for evaluating the Meson / Ninja build system for the Onethinx OTX-18 or PSoC6
-## Description
-### Prerequisites:
+## Prerequisites:
   - VS Code Extension: Meson / mesonbuild
   - Windows:
     - Install Meson & Ninja with the MSI installer from: [meson-1.0.0-64.msi
@@ -11,7 +10,7 @@ This example is used for evaluating the Meson / Ninja build system for the Oneth
     - sudo port install meson (using MacPorts)
     - sudo port install ninja (using MacPorts)
 
-## Project Structure:
+## Project Description:
 ![VScode_Creator_Structure](https://github.com/onethinx/Readme_assets/raw/d4b9c19a9f5b2be4e3fee4209b54af13d91a648f/VScode_Creator_Structure.png)
 
 The project should configured with PSoC Creator. After setup, the project can be built (Shift-F6) to generate the libraries and source files for the configuration. PSoC Creator will save these files in the 'Generated_Source' folder. When building succeeds, PSoC Creator executes the postbuild command which launches the Creator_PostBuild tool (see below for the postbuild setup).
