@@ -20,7 +20,18 @@
             "options": {
                 "statusbar": { "hide" : true },
                 "cwd": "${workspaceFolder}"
-            },
+            }
+        },
+      	{
+            "label": "Meson: configure",
+            "hide": true,
+            "type": "shell",
+            "command": "meson setup --cross-file cross_gcc.build build",
+            "args": [],
+            "options": {
+                "statusbar": { "hide" : true },
+                "cwd": "${workspaceFolder}"
+            }
         },
         {
             "label": "Meson: clean",
@@ -31,7 +42,7 @@
             "options": {
                 "statusbar": { "hide" : true },
                 "cwd": "${workspaceFolder}"
-            },
+            }
         },
         {
             "label": "Meson: build",

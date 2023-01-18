@@ -57,21 +57,26 @@ otxPreLaunchOLD = async (vscode) => {
 };
 
 otxClean = async (vscode) => {
-   var ret = await executeTask(vscode, "Meson: clean-reconfigure");
-   if (ret == 0) return '';
-   vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
-   return null;
-};
-
-var basePath = "";
-
-otxBuild = async (vscode) => {
-    if(vscode.workspace.workspaceFolders === undefined)
+    let { status, basePath } = await checkSetup(vscode);
+    if (status == 'error') 
     {
-        vscode.window.showErrorMessage("No workspace opened!");
+        vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
         return null;
     }
-    basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    if (status == 'configured') return '';
+    var ret = await executeTask(vscode, "Meson: clean-reconfigure");
+    if (ret == 0) return '';
+    vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
+    return null;
+};
+
+otxBuild = async (vscode) => {
+    let { status, basePath } =  await checkSetup(vscode);
+    if (status == 'error') 
+    {
+        vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
+        return null;
+    }
     let sourcePath = path.join(basePath, "source");
     const mesonBuildFile = path.join(basePath, "meson.build");
     if (!fs.existsSync(mesonBuildFile))
@@ -79,8 +84,8 @@ otxBuild = async (vscode) => {
         vscode.window.showErrorMessage("meson.build file not found!");
         return null;
     }
-    var headerContents = readDirectory([], sourcePath, '.h', true);
-    var sourceContents = readDirectory([], sourcePath, '.c', false);
+    var headerContents = readDirectory(basePath, [], sourcePath, '.h', true);
+    var sourceContents = readDirectory(basePath, [], sourcePath, '.c', false);
 
     updateMeson(mesonBuildFile, headerContents, sourceContents);
     var ret = await executeTask(vscode, "Meson: build");
@@ -227,6 +232,26 @@ otxRun = async (vscode) => {
 const fs = require("fs");
 const path = require("path");
 
+async function checkSetup(vscode)
+{
+    var basePath = "";
+    if(vscode.workspace.workspaceFolders === undefined)
+    {
+        vscode.window.showErrorMessage("No workspace opened!");
+        return { 'status': 'error', 'basePath': basePath };
+    }
+    basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    buildDir = path.join(basePath, "build");
+    if (!fs.existsSync(path.join(buildDir, "meson-info")))
+    {
+        if (!fs.existsSync(buildDir))
+            await fs.promises.mkdir(buildDir)
+        var ret = await executeTask(vscode, "Meson: configure");
+        return { 'status': 'configured', 'basePath': basePath };
+    }
+    return { 'status': 'ok', 'basePath': basePath };
+}
+
 function writeFile(fileName, contents)
 {
 	fs.writeFile(fileName, contents, (err) => {
@@ -234,7 +259,7 @@ function writeFile(fileName, contents)
     })
 }
 
-function readDirectory(refArray, dir, extension, foldersOnly) {
+function readDirectory(basePath, refArray, dir, extension, foldersOnly) {
 	var pushed = false;
 	fs.readdirSync(dir).forEach(file => {
 		let current = path.join(dir,file);
@@ -252,7 +277,7 @@ function readDirectory(refArray, dir, extension, foldersOnly) {
                 }
 			} 
 		} else
-			readDirectory(refArray, current, extension, foldersOnly)
+			readDirectory(basePath, refArray, current, extension, foldersOnly)
 	});
     return refArray;
 }
