@@ -35,6 +35,22 @@ CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
 MESON_SOURCE_LOC = meson.current_source_dir()
 CREATOR_DIR = 'Onethinx_Creator.cydsn'
 
+# Creator_PostBuildVersion_Line - automatic insert of Creator_PostBuild version. Do not edit the line below
+creatorPostBuildVersion = '2.10'
+
+# Creator_PostBuild_devicePart_Line - automatic insert of device part by Creator_PostBuild. Do not edit the line below
+devicePart = 'CY8C4248LQI-BL583'
+
+# Creator_PostBuild_linkerFile_Line - automatic insert of linker file by Creator_PostBuild. Do not edit the line below
+linkerFile = '.\Generated_Source\PSoC4\cm0gcc.ld'
+
+# Creator_PostBuild_SVDfile_Line - automatic insert of SVD file by Creator_PostBuild. Do not edit the line below
+SVDfile = 'PSoC_Creator.svd'
+
+# Creator_PostBuild_prePostBuild_Lines - automatic insert of pre- and postbuild commands by Creator_PostBuild. Do not edit the two line below
+preBuildCommands = ''
+postBuildCommands = ''
+
 #==============================================================================#
 # import tools
 
@@ -49,46 +65,52 @@ memcalc 		= find_program(CONFIG_DIR + '/scripts/memcalc').path()
 #==============================================================================#
 # setup compile & link arguments
 
-c_args     += [
+assembler_args +=
+[
+# Creator_PostBuild_AssemblerOptions_Start - automatic insert of assembler options by Creator_PostBuild. Do not edit below this line
+	'-mcpu=cortex-m0',
+	'-mthumb',
+	'-g',
+	'-W',
+# Creator_PostBuild_AssemblerOptions_End - automatic insert of assembler options by Creator_PostBuild. Do not edit above this line
+]
+
+compiler_args     += [
+# Creator_PostBuild_CompilerOptions_Start - automatic insert of compiler options by Creator_PostBuild. Do not edit below this line
+	'-mcpu=cortex-m0',
+	'-mthumb',
 	'-g',
 	'-DDEBUG',
-	'-DCY_CORE_ID=0',
-	'-DCY_PSOC_CREATOR_USED=1',
 	'-Wall',
 	'-ffunction-sections',
 	'-ffat-lto-objects',
-	'-Og',
-	'-c',
-	'-DCY8C6347BZI_BLD53',
-	'-mthumb',
-	'-mcpu=cortex-m4',
-	'-mfloat-abi=softfp',
-	'-mfpu=fpv4-sp-d16'
+	'-O0',
+# Creator_PostBuild_CompilerOptions_End - automatic insert of compiler options by Creator_PostBuild. Do not edit above this line
 ]
 
-link_args     = [
-	#'-Wl,--start-group',
-	'-mcpu=cortex-m4',
-	'-mfloat-abi=softfp',
-	'-mfpu=fpv4-sp-d16',
+linker_args     = [
+# Creator_PostBuild_LinkerOptions_Start - automatic insert of linker options by Creator_PostBuild. Do not edit below this line
+	'-mcpu=cortex-m0',
 	'-mthumb',
-	'-Wl,-Map,'+PROJECTNAME+'.map',
-	'-T'+ONETHINX_PACK_LOC+'/linker/OnethinxCore_18.ld',
+	'-LGenerated_Source\PSoC4',
+	'-TGenerated_Source\PSoC4\cm0gcc.ld',
 	'-specs=nano.specs',
 	'-Wl,--gc-sections',
 	'-g',
 	'-ffunction-sections',
-	'-Og',
+	'-O0',
 	'-ffat-lto-objects',
-	#'-Wl,--end-group'
+# Creator_PostBuild_IncludeHeaderDirs_End - automatic insert of linker options by Creator_PostBuild. Do not edit above this line
 ]
+
+
 
 incdirs       = [
 # OTX_Extension_HeaderFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
 	'source/OnethinxCore',
 	'source',
 # OTX_Extension_HeaderFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
-# CoreStripper_IncludeHeaderDirs_Start - automatic insert of include header dirs by CoreStripper. Do not edit below this line
+# Creator_PostBuild__IncludeFolders_Start - automatic insert of include header folders by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/cmsis/include/',
@@ -112,7 +134,7 @@ incdirs       = [
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/trigmux/',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/wdt/',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/middleware/',
-# CoreStripper_IncludeHeaderDirs_End - automatic insert of include header dirs by CoreStripper. Do not edit above this line
+# Creator_PostBuild__IncludeFolders_End - automatic insert of include header folders by Creator_PostBuild. Do not edit above this line
 ]
 
 sourcefiles       = [
@@ -156,6 +178,11 @@ cc = meson.get_compiler('c')
 
 # example: include library.a from directory
 #link_deps += declare_dependency( dependencies : cc.find_library('library', dirs : ['directory/libdir']) )
+link_deps += [
+# Creator_PostBuild_LibSources_Start - automatic insert of include source files by Creator_PostBuild. Do not edit below this line
+	declare_dependency( dependencies : cc.find_library('gccCyBLEStack_BLE_SOC_PERIPHERAL', dirs : [CREATOR_DIR + '/./Export/ARM_GCC_Generic/BLE_v3_66']) ),
+# Creator_PostBuild_LibSources_End - automatic insert of include source files by Creator_PostBuild. Do not edit above this line
+]
 
 # example: include object.o from directory
 #link_deps += declare_dependency( link_args : ['directory/libdir/object.o'] )
@@ -172,8 +199,8 @@ cc = meson.get_compiler('c')
 main = executable(
             PROJECTNAME,          [sourcefiles],
             name_suffix         : 'elf',
-            c_args              : [c_args],
-            link_args           : [link_args],
+            c_args              : [compiler_args],
+            link_args           : [linker_args],
             dependencies        : link_deps,
             include_directories : [incdirs] )
 
