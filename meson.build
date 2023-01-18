@@ -100,7 +100,7 @@ linker_args     = [
 	'-ffunction-sections',
 	'-O0',
 	'-ffat-lto-objects',
-# Creator_PostBuild_IncludeHeaderDirs_End - automatic insert of linker options by Creator_PostBuild. Do not edit above this line
+# Creator_PostBuild_LinkerOptions_End - automatic insert of linker options by Creator_PostBuild. Do not edit above this line
 ]
 
 
@@ -144,7 +144,7 @@ sourcefiles       = [
 	'source/OnethinxCore/OnethinxCore01.c',
 	'source/main.c',
 # OTX_Extension_SourceFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
-# CoreStripper_SourceFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
+# Creator_PostBuild_SourceFiles_Start - automatic insert of source files by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_cfg.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_sysint_cfg.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cymetadata.c',
@@ -168,7 +168,7 @@ sourcefiles       = [
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/wdt/cy_wdt.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/device/cy_device.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/middleware/ble/cy_ble_clk.c',
-# CoreStripper_SourceFiles_End - automatic insert of include source files by CoreStripper. Do not edit above this line
+# Creator_PostBuild_SourceFiles_End - automatic insert of source files by Creator_PostBuild. Do not edit above this line
 ]
 
 #==============================================================================#
