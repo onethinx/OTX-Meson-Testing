@@ -22,7 +22,7 @@ For example, the comment tags to insert the source files looks like this:
 ...
 # Creator_PostBuild_SourceFiles_End - automatic insert of source files by Creator_PostBuild. Do not edit above this line
 ```
-The available comment tags can be found in the [meson.build file in this example.](https://github.com/onethinx/OTX-Meson-Testing/blob/main/meson.build)
+The available comment tags can be found [here](https://github.com/RolfNoot/Creator_PostBuild/blob/main/README.md) and it's implemention into the meson.build file can be found [in this example.](https://github.com/onethinx/OTX-Meson-Testing/blob/main/meson.build)
 
 ## PSoC Creator Project Setup:
 1. <b>Post Build setup</b><br>
