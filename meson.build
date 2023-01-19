@@ -38,6 +38,9 @@ CREATOR_DIR = 'Onethinx_Creator.cydsn'
 # Creator_PostBuildVersion_Line - automatic insert of Creator_PostBuild version. Do not edit the line below
 creatorPostBuildVersion = '2.10'
 
+# Creator_DateTime_Line - automatic insert of Creator_PostBuild version. Do not edit the line below
+creatorGeneratedDateTime = '2023-01-19 11:43:02'
+
 # Creator_PostBuild_devicePart_Line - automatic insert of device part by Creator_PostBuild. Do not edit the line below
 devicePart = 'CY8C4248LQI-BL583'
 
