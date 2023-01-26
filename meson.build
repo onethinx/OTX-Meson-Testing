@@ -9,52 +9,49 @@ cpu_family = 'arm'
 cpu        = 'cortex-m4'
 endian     = 'little'
 
-#==============================================================================#
-# initialize some globals
-srcs          = []
-incdirs       = []
-c_args        = []
-link_args     = []
-link_deps     = []
+#================================================================================================================================#
+# check Creator_PostBuild version and set various variables for possible use
 
-#==============================================================================#
-# set directories
+# Creator_PostBuild_Minumum_Version: '2.10' - used for checking Creator_PostBuild minimum version, do not remove
 
-if build_machine.system() == 'windows'
-	PROJECTNAME =  meson.current_source_dir().split('\\').get(-1)
-	ONETHINX_PACK_LOC = run_command('cmd', '/C', 'echo %ONETHINX_PACK_LOC%', check: true).stdout().strip()
-	ONETHINX_TOOLS_LOC = run_command('cmd', '/C', 'echo %ONETHINX_TOOLS_LOC%', check: true).stdout().strip()
-else
-	PROJECTNAME =  meson.current_source_dir().split('/').get(-1)
-	ONETHINX_PACK_LOC = run_command('sh', '-c', 'echo $ONETHINX_PACK_LOC', check: true).stdout().strip()
-	ONETHINX_TOOLS_LOC = run_command('sh', '-c', 'echo $ONETHINX_TOOLS_LOC', check: true).stdout().strip()
-endif
-
-CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
-
-MESON_SOURCE_LOC = meson.current_source_dir()
-CREATOR_DIR = 'Onethinx_Creator.cydsn'
-
-# Creator_PostBuildVersion_Line - automatic insert of Creator_PostBuild version. Do not edit the line below
+# Creator_PostBuild_Version_Line - automatic insert of Creator_PostBuild version. Do not edit the line below
 creatorPostBuildVersion = '2.10'
 
-# Creator_DateTime_Line - automatic insert of Creator Generated DateTime. Do not edit the line below
-creatorGeneratedDateTime = '2023-01-19 11:43:02'
+# Creator_PostBuild_DateTime_Line - automatic insert of Creator Generated DateTime. Do not edit the line below
+creatorGeneratedDateTime = '2023-01-26 16:54:35'
 
 # Creator_PostBuild_devicePart_Line - automatic insert of device part by Creator_PostBuild. Do not edit the line below
-devicePart = 'CY8C4248LQI-BL583'
+devicePart = 'CY8C6347BZI-BLD53'
 
 # Creator_PostBuild_linkerFile_Line - automatic insert of linker file by Creator_PostBuild. Do not edit the line below
-linkerFile = '.\Generated_Source\PSoC4\cm0gcc.ld'
+linkerFile = './cy8c6xx7_cm4_dual.ld'
 
 # Creator_PostBuild_SVDfile_Line - automatic insert of SVD file by Creator_PostBuild. Do not edit the line below
-SVDfile = 'PSoC_Creator.svd'
+SVDfile = 'Onethinx_Creator.svd'
 
 # Creator_PostBuild_prePostBuild_Lines - automatic insert of pre- and postbuild commands by Creator_PostBuild. Do not edit the two line below
 preBuildCommands = ''
 postBuildCommands = ''
 
-#==============================================================================#
+# Creator_PostBuild_Directory_Line - automatic insert of Creator Project main directory. Do not edit the line below
+creatorDirectory = 'Onethinx_Creator.cydsn'
+
+# OTX_Extension_print(PROJECTNAME = '${workspaceFolderBasename}')
+PROJECTNAME = 'OTX-Meson-Testing'
+
+# OTX_Extension_print(ONETHINX_PACK_LOC = '${env:ONETHINX_PACK_LOC}')
+ONETHINX_PACK_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS'
+
+# OTX_Extension_print(ONETHINX_TOOLS_LOC = '${env:ONETHINX_TOOLS_LOC}')
+ONETHINX_TOOLS_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0'
+# set directories
+
+CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
+MESON_SOURCE_LOC = meson.current_source_dir()
+
+CREATOR_DIR = MESON_SOURCE_LOC + '/' + creatorDirectory
+
+#================================================================================================================================#
 # import tools
 
 objcopy  		= find_program('arm-none-eabi-objcopy').path()
@@ -65,98 +62,103 @@ cymcuelftool 	= find_program(ONETHINX_TOOLS_LOC + '/cymcuelftool-1.0/bin/cymcuel
 readelf  		= find_program('arm-none-eabi-readelf').path()
 memcalc 		= find_program(CONFIG_DIR + '/scripts/memcalc').path()
 
-#==============================================================================#
+#================================================================================================================================#
 # setup compile & link arguments
 
-assembler_args +=
-[
+assembler_args = [
 # Creator_PostBuild_AssemblerOptions_Start - automatic insert of assembler options by Creator_PostBuild. Do not edit below this line
-	'-mcpu=cortex-m0',
+	'-mcpu=cortex-m4',
+	'-mfloat-abi=softfp',
+	'-mfpu=fpv4-sp-d16',
 	'-mthumb',
 	'-g',
 	'-W',
 # Creator_PostBuild_AssemblerOptions_End - automatic insert of assembler options by Creator_PostBuild. Do not edit above this line
 ]
 
-compiler_args     += [
+compiler_args     = [
 # Creator_PostBuild_CompilerOptions_Start - automatic insert of compiler options by Creator_PostBuild. Do not edit below this line
-	'-mcpu=cortex-m0',
+	'-mcpu=cortex-m4',
+	'-mfloat-abi=softfp',
+	'-mfpu=fpv4-sp-d16',
 	'-mthumb',
 	'-g',
 	'-DDEBUG',
+	'-DCY_CORE_ID=0',
+	'-DCY_PSOC_CREATOR_USED=1',
+	'-DCY8C6347BZI_BLD53',
 	'-Wall',
 	'-ffunction-sections',
 	'-ffat-lto-objects',
-	'-O0',
+	'-Og',
 # Creator_PostBuild_CompilerOptions_End - automatic insert of compiler options by Creator_PostBuild. Do not edit above this line
 ]
 
 linker_args     = [
+	'-T'+ONETHINX_PACK_LOC+'/linker/OnethinxCore_18.ld',
 # Creator_PostBuild_LinkerOptions_Start - automatic insert of linker options by Creator_PostBuild. Do not edit below this line
-	'-mcpu=cortex-m0',
+	'-mcpu=cortex-m4',
+	'-mfloat-abi=softfp',
+	'-mfpu=fpv4-sp-d16',
 	'-mthumb',
-	'-LGenerated_Source\PSoC4',
-	'-TGenerated_Source\PSoC4\cm0gcc.ld',
 	'-specs=nano.specs',
 	'-Wl,--gc-sections',
 	'-g',
 	'-ffunction-sections',
-	'-O0',
+	'-Og',
 	'-ffat-lto-objects',
 # Creator_PostBuild_LinkerOptions_End - automatic insert of linker options by Creator_PostBuild. Do not edit above this line
 ]
 
-
-
-incdirs       = [
-# OTX_Extension_HeaderFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
+include_dirs       = [
+# OTX_Extension_HeaderFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
 	'source/OnethinxCore',
 	'source',
-# OTX_Extension_HeaderFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
-# Creator_PostBuild__IncludeFolders_Start - automatic insert of include header folders by Creator_PostBuild. Do not edit below this line
-	'Onethinx_Creator.cydsn/',
+# OTX_Extension_HeaderFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
+# Creator_PostBuild_IncludeFolders_Start - automatic insert of include header folders by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/cmsis/include/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/devices/psoc6/include/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/devices/psoc6/include/ip/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/device/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/efuse/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/flash/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/gpio/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/ipc/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/lvd/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/profile/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/prot/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/sysanalog/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/sysclk/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/sysint/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/syslib/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/syspm/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/systick/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/trigmux/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/wdt/',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/middleware/',
-# Creator_PostBuild__IncludeFolders_End - automatic insert of include header folders by Creator_PostBuild. Do not edit above this line
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/cmsis/include',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/efuse',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/flash',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/gpio',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/ipc',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/lvd',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/profile',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/prot',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/sysanalog',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/sysclk',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/sysint',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/syslib',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/syspm',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/systick',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/trigmux',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/wdt',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/device',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/middleware/ble',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/devices/psoc6/include',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/devices/psoc6/include/ip',
+	'Onethinx_Creator.cydsn/',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/middleware',
+# Creator_PostBuild_IncludeFolders_End - automatic insert of include header folders by Creator_PostBuild. Do not edit above this line
 ]
 
 sourcefiles       = [
 	CREATOR_DIR + '/gcc/startup_psoc6_01_cm4.S',
 	CREATOR_DIR + '/system_psoc6_cm4.c',
-# OTX_Extension_SourceFiles_Start - automatic insert of source files by CoreStripper. Do not edit below this line
+# OTX_Extension_SourceFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
 	'source/OnethinxCore/OnethinxCore01.c',
 	'source/main.c',
-# OTX_Extension_SourceFiles_End - automatic insert of source files by CoreStripper. Do not edit above this line
+# OTX_Extension_SourceFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_SourceFiles_Start - automatic insert of source files by Creator_PostBuild. Do not edit below this line
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_cfg.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_sysint_cfg.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cymetadata.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/efuse/cy_efuse.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/flash/cy_flash.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/gpio/cy_gpio.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/ipc/cy_ipc_drv.c',
-	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/ipc/cy_ipc_pipe.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/ipc/cy_ipc_sema.c',
+	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/ipc/cy_ipc_pipe.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/lvd/cy_lvd.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/profile/cy_profile.c',
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/pdl/drivers/peripheral/prot/cy_prot.c',
@@ -174,29 +176,28 @@ sourcefiles       = [
 # Creator_PostBuild_SourceFiles_End - automatic insert of source files by Creator_PostBuild. Do not edit above this line
 ]
 
-#==============================================================================#
+#================================================================================================================================#
 # include libraries
 
 cc = meson.get_compiler('c')
 
 # example: include library.a from directory
-#link_deps += declare_dependency( dependencies : cc.find_library('library', dirs : ['directory/libdir']) )
-link_deps += [
+#link_deps = declare_dependency( dependencies : cc.find_library('library', dirs : ['directory/libdir']) )
+link_deps = [
 # Creator_PostBuild_LibSources_Start - automatic insert of include source files by Creator_PostBuild. Do not edit below this line
-	declare_dependency( dependencies : cc.find_library('gccCyBLEStack_BLE_SOC_PERIPHERAL', dirs : [CREATOR_DIR + '/./Export/ARM_GCC_Generic/BLE_v3_66']) ),
 # Creator_PostBuild_LibSources_End - automatic insert of include source files by Creator_PostBuild. Do not edit above this line
 ]
 
 # example: include object.o from directory
 #link_deps += declare_dependency( link_args : ['directory/libdir/object.o'] )
 
-#==============================================================================#
+#================================================================================================================================#
 # run prebuild script 
 
 #prebuild = custom_target('prebuild', output : 'buildversion.h', command : [MESON_SOURCE_LOC+'/config/prebuild.bash']) #use prebuild.bash / prebuild.bat file
 #link_deps += declare_dependency( sources : [prebuild])
 
-#==============================================================================#
+#================================================================================================================================#
 # build executable
 
 main = executable(
@@ -205,9 +206,9 @@ main = executable(
             c_args              : [compiler_args],
             link_args           : [linker_args],
             dependencies        : link_deps,
-            include_directories : [incdirs] )
+            include_directories : [include_dirs] )
 
-#==============================================================================#
+#================================================================================================================================#
 # run post build
 
 signed = custom_target(
