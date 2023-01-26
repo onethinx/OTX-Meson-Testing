@@ -95,7 +95,7 @@ compiler_args     = [
 ]
 
 linker_args     = [
-	'-T'+ONETHINX_PACK_LOC+'/linker/OnethinxCore_18.ld',
+	'-T'+ONETHINX_PACK_LOC+'/linker/OnethinxCore_18.ld', 		# manual insert of OTX18 linkerfile
 # Creator_PostBuild_LinkerOptions_Start - automatic insert of linker options by Creator_PostBuild. Do not edit below this line
 	'-mcpu=cortex-m4',
 	'-mfloat-abi=softfp',
@@ -144,6 +144,7 @@ include_dirs       = [
 ]
 
 sourcefiles       = [
+	# manual insert of Creator_PostBuild stripped files
 	CREATOR_DIR + '/gcc/startup_psoc6_01_cm4.S',
 	CREATOR_DIR + '/system_psoc6_cm4.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line

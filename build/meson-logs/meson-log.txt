@@ -1,4 +1,4 @@
-Build started at 2023-01-26T17:00:53.088197
+Build started at 2023-01-26T17:13:34.535655
 Main binary: /opt/local/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10
 Build Options: -Dbackend=ninja '--cross-file /Volumes/Data/VScode/GIT/OTX-Meson-Testing/cross_gcc.build'
 Python system: Darwin
@@ -36,8 +36,8 @@ meson_test 0.1
 
 Found ninja-1.11.1 at /opt/local/bin/ninja
 Running compile:
-Working directory:  /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmp3xvcuwhr
-Command line:  arm-none-eabi-gcc -I/usr/local/opt/ruby/include /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmp3xvcuwhr/testfile.c -o /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmp3xvcuwhr/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+Working directory:  /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpumrgyuqd
+Command line:  arm-none-eabi-gcc -I/usr/local/opt/ruby/include /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpumrgyuqd/testfile.c -o /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpumrgyuqd/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
 
 Code:
  
