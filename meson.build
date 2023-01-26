@@ -33,6 +33,7 @@ SVDfile = 'Onethinx_Creator.svd'
 preBuildCommands = ''
 postBuildCommands = ''
 
+# set directories
 # Creator_PostBuild_Directory_Line - automatic insert of Creator Project main directory. Do not edit the line below
 creatorDirectory = 'Onethinx_Creator.cydsn'
 
@@ -44,7 +45,6 @@ ONETHINX_PACK_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS'
 
 # OTX_Extension_print(ONETHINX_TOOLS_LOC = '${env:ONETHINX_TOOLS_LOC}')
 ONETHINX_TOOLS_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0'
-# set directories
 
 CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
 MESON_SOURCE_LOC = meson.current_source_dir()
