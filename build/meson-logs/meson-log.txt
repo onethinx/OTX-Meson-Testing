@@ -1,50 +1,54 @@
-Build started at 2023-01-26T17:13:34.535655
-Main binary: /opt/local/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10
-Build Options: -Dbackend=ninja '--cross-file /Volumes/Data/VScode/GIT/OTX-Meson-Testing/cross_gcc.build'
-Python system: Darwin
+Build started at 2023-01-27T15:57:08.243760
+Main binary: C:\Program Files\Meson\meson.exe
+Build Options: --cross-file=cross_gcc.build
+Python system: Windows
 The Meson build system
-Version: 0.63.3
-Source dir: /Volumes/Data/VScode/GIT/OTX-Meson-Testing
-Build dir: /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build
+Version: 1.0.0
+Source dir: \\Mac\Data\VScode\GIT\OTX-Meson-Testing
+Build dir: \\Mac\Data\VScode\GIT\OTX-Meson-Testing\build
 Build type: cross build
 Project name: meson_test
 Project version: 0.1
 C compiler for the host machine: arm-none-eabi-gcc (gcc 10.3.1 "arm-none-eabi-gcc (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1 20210824 (release)")
 C linker for the host machine: arm-none-eabi-gcc ld.bfd 10.3-2021
-C compiler for the build machine: cc (clang 13.1.6 "Apple clang version 13.1.6 (clang-1316.0.21.2.3)")
-C linker for the build machine: cc ld64 762
+detecting CPU family based on trial='amd64'
+C compiler for the build machine: cc (gcc 12.2.0 "cc (Rev4, Built by MSYS2 project) 12.2.0")
+C linker for the build machine: cc ld.bfd 2.39
+detecting CPU family based on trial='amd64'
+detecting CPU family based on trial='amd64'
 Build machine cpu family: x86_64
 Build machine cpu: x86_64
 Host machine cpu family: arm
 Host machine cpu: cortex-m4
 Target machine cpu family: arm
 Target machine cpu: cortex-m4
-Program arm-none-eabi-objcopy found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objcopy)
-Program arm-none-eabi-objdump found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objdump)
-Program arm-none-eabi-size found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-size)
-Program arm-none-eabi-gdb found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb)
-Program /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0/cymcuelftool-1.0/bin/cymcuelftool found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0/cymcuelftool-1.0/bin/cymcuelftool)
-Program arm-none-eabi-readelf found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-readelf)
-Program /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/config/scripts/memcalc found: YES (/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/config/scripts/memcalc)
+Program arm-none-eabi-objcopy found: YES (C:/VSCode_OnethinxPack_Windows/gcc-arm-none-eabi-10.3-2021.10/bin\arm-none-eabi-objcopy.EXE)
+Program arm-none-eabi-objdump found: YES (C:/VSCode_OnethinxPack_Windows/gcc-arm-none-eabi-10.3-2021.10/bin\arm-none-eabi-objdump.EXE)
+Program arm-none-eabi-size found: YES (C:/VSCode_OnethinxPack_Windows/gcc-arm-none-eabi-10.3-2021.10/bin\arm-none-eabi-size.EXE)
+Program arm-none-eabi-gdb found: YES (C:/VSCode_OnethinxPack_Windows/gcc-arm-none-eabi-10.3-2021.10/bin\arm-none-eabi-gdb.EXE)
+Program C:/VSCode_OnethinxPack_Windows/tools_3.0/cymcuelftool-1.0/bin/cymcuelftool found: YES (C:/VSCode_OnethinxPack_Windows/tools_3.0/cymcuelftool-1.0/bin/cymcuelftool.exe)
+Program arm-none-eabi-readelf found: YES (C:/VSCode_OnethinxPack_Windows/gcc-arm-none-eabi-10.3-2021.10/bin\arm-none-eabi-readelf.EXE)
+Program C:/VSCode_OnethinxPack_Windows/config/scripts/memcalc found: YES (C:/VSCode_OnethinxPack_Windows/config/scripts/memcalc.exe)
+detecting CPU family based on trial='amd64'
 Build targets in project: 3
 
 meson_test 0.1
 
   User defined options
-    Cross files: /Volumes/Data/VScode/GIT/OTX-Meson-Testing/cross_gcc.build
-    backend    : ninja
+    Cross files: cross_gcc.build
 
-Found ninja-1.11.1 at /opt/local/bin/ninja
+Found ninja-1.11.1 at "C:\Program Files\Meson\ninja.EXE"
 Running compile:
-Working directory:  /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpumrgyuqd
-Command line:  arm-none-eabi-gcc -I/usr/local/opt/ruby/include /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpumrgyuqd/testfile.c -o /Volumes/Data/VScode/GIT/OTX-Meson-Testing/build/meson-private/tmpumrgyuqd/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+Working directory:  \\Mac\Data\VScode\GIT\OTX-Meson-Testing\build\meson-private\tmp98dmp8es
+Command line:  arm-none-eabi-gcc \\Mac\Data\VScode\GIT\OTX-Meson-Testing\build\meson-private\tmp98dmp8es\testfile.c -o \\Mac\Data\VScode\GIT\OTX-Meson-Testing\build\meson-private\tmp98dmp8es\output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
 
 Code:
  
 Compiler stdout:
- install: /Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/
-programs: =/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/bin/arm-none-eabi/10.3.1/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/bin/
-libraries: =/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/arm-none-eabi/10.3.1/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/lib/arm-none-eabi/10.3.1/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/lib/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/usr/lib/arm-none-eabi/10.3.1/:/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/usr/lib/
+ install: c:\vscode_onethinxpack_windows\gcc-arm-none-eabi-10.3-2021.10\bin\../lib/gcc/arm-none-eabi/10.3.1/
+programs: =c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/bin/arm-none-eabi/10.3.1/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/bin/
+libraries: =c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/arm-none-eabi/10.3.1/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/lib/arm-none-eabi/10.3.1/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/lib/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/usr/lib/arm-none-eabi/10.3.1/;c:/vscode_onethinxpack_windows/gcc-arm-none-eabi-10.3-2021.10/bin/../arm-none-eabi/usr/lib/
 
 Compiler stderr:
  
+Command line for building ['OTX-Meson-Testing.elf'] is long, using a response file

@@ -57,13 +57,32 @@ otxPreLaunchOLD = async () => {
 
 otxClean = async () => {
     let { status, basePath } = await checkSetup();
-    if (status == 'error') 
+    // if (status == 'error') 
+    // {
+    //     vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
+    //     return null;
+    // }
+   // if (status == 'configured') return '';
+    let sourcePath = path.join(basePath, "source");
+    const mesonBuildFile = path.join(basePath, "meson.build");
+    if (!fs.existsSync(mesonBuildFile))
     {
-        vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
+        vscode.window.showErrorMessage("meson.build file not found!");
         return null;
     }
-    if (status == 'configured') return '';
-    var ret = await executeTask("Meson: clean-reconfigure");
+    var headerContents = readDirectory(basePath, [], sourcePath, '.h', true);
+    var sourceContents = readDirectory(basePath, [], sourcePath, '.c', false);
+
+    updateMeson(mesonBuildFile, headerContents, sourceContents);
+    var ret = 0;
+    //vscode.window.showErrorMessage("a!"+ status);
+    if (status == 'missing') await fs.promises.mkdir(path.join(basePath, "build"));
+    if (status == 'empty')
+        ret = await executeTask("Meson: wipe");
+    else if (status == 'missing' || status == 'invalid')
+        ret = await executeTask("Meson: configure");
+    else 
+        ret = await executeTask("Meson: clean-reconfigure");
     if (ret == 0) return '';
     vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
     return null;
@@ -71,9 +90,9 @@ otxClean = async () => {
 
 otxBuild = async () => {
     let { status, basePath } =  await checkSetup();
-    if (status == 'error') 
+    if (status != 'ok') 
     {
-        vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
+        vscode.window.showErrorMessage("The build task terminated with exit code: " + status + ".\r\nPlease Clean-Reconfigure.", { modal: true });
         return null;
     }
     let sourcePath = path.join(basePath, "source");
@@ -241,13 +260,19 @@ async function checkSetup()
     }
     basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     buildDir = path.join(basePath, "build");
-    if (!fs.existsSync(path.join(buildDir, "meson-info")))
-    {
-        if (!fs.existsSync(buildDir))
-            await fs.promises.mkdir(buildDir)
-        var ret = await executeTask("Meson: configure");
-        return { 'status': 'configured', 'basePath': basePath };
-    }
+    if (!fs.existsSync(buildDir)) return { 'status': 'missing', 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "meson-private"))) return { 'status': 'invalid', 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "meson-info"))) return { 'status': 'empty', 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "build.ninja"))) return { 'status': 'unconfigured', 'basePath': basePath };
+    // {
+    //     if (!fs.existsSync(buildDir))
+    //     {
+    //         await fs.promises.mkdir(buildDir);
+    //         return { 'status': 'empty', 'basePath': basePath };
+    //     }
+    //     //var ret = await executeTask("Meson: configure");
+    //     return { 'status': 'unconfigured', 'basePath': basePath };
+    // }
     return { 'status': 'ok', 'basePath': basePath };
 }
 
@@ -303,22 +328,6 @@ function updateMeson(mesonFile, headerContents, sourceContents) {
             var array = line.match(regexp);
             if (array != null)
                 arr = arr.concat(substituteVariables(array[1]));
-            else
-                arr = arr.concat('Not found!');
-			logOut = false; linesStripped = 1;
-		}
-        else if (line.includes("OTX_Extension_getEnv")) {
-            const regexp = /\(\s*(\w*).*,\s*(\w*).*\)/;
-            var array = line.match(regexp);
-            array = (array === null)? ["Not found!", ""] : [array[1], process.env[array[2]]];
-            arr = arr.concat(array[0] + " = '" + array[1] + "'");
-			logOut = false; linesStripped = 1;
-		}
-        else if (line.includes("OTX_Extension_getVariable")) {
-            const regexp = /\(\s*([^ ]+).*,\s*([^ ]+).*\)/;
-            var array = line.match(regexp);
-            if (array != null)
-                arr = arr.concat(array[1] + " = '" + substituteVariables(array[2]) + "'");
             else
                 arr = arr.concat('Not found!');
 			logOut = false; linesStripped = 1;

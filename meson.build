@@ -41,10 +41,10 @@ creatorDirectory = 'Onethinx_Creator.cydsn'
 PROJECTNAME = 'OTX-Meson-Testing'
 
 # OTX_Extension_print(ONETHINX_PACK_LOC = '${env:ONETHINX_PACK_LOC}')
-ONETHINX_PACK_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS'
+ONETHINX_PACK_LOC = 'C:/VSCode_OnethinxPack_Windows'
 
 # OTX_Extension_print(ONETHINX_TOOLS_LOC = '${env:ONETHINX_TOOLS_LOC}')
-ONETHINX_TOOLS_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0'
+ONETHINX_TOOLS_LOC = 'C:/VSCode_OnethinxPack_Windows/tools_3.0'
 
 CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
 MESON_SOURCE_LOC = meson.current_source_dir()
@@ -112,8 +112,8 @@ linker_args     = [
 
 include_dirs       = [
 # OTX_Extension_HeaderFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
-	'source/OnethinxCore',
 	'source',
+	'source/OnethinxCore',
 # OTX_Extension_HeaderFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_IncludeFolders_Start - automatic insert of include header folders by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6',
@@ -149,8 +149,8 @@ sourcefiles       = [
 	CREATOR_DIR + '/system_psoc6_cm4.c',
 	CREATOR_DIR + '/Generated_Source/PSoC6/cyfitter_cfg_otx.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
-	'source/OnethinxCore/OnethinxCore01.c',
 	'source/main.c',
+	'source/OnethinxCore/OnethinxCore01.c',
 # OTX_Extension_SourceFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_SourceFiles_Start - automatic insert of source files by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_sysint_cfg.c',

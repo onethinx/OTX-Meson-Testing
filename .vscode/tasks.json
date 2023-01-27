@@ -1,6 +1,6 @@
 {
-  "version": "2.0.0",
-  "tasks": [
+    "version": "2.0.0",
+    "tasks": [
     {
         "label": "JLink_Power_Off",
         "type": "shell",
@@ -16,11 +16,12 @@
         "hide": true,
         "type": "shell",
         "command": "meson setup --reconfigure --cross-file cross_gcc.build build && ninja -C build -t clean",
+        "windows": { "command": "meson setup --reconfigure --cross-file cross_gcc.build build ; ninja -C build -t clean" },
         "args": [],
         "options": {
             "statusbar": { "hide" : true },
             "cwd": "${workspaceFolder}"
-        }
+        } 
     },
     {
         "label": "Meson: configure",
@@ -34,10 +35,10 @@
         }
     },
     {
-        "label": "Meson: clean",
+        "label": "Meson: wipe",
         "hide": true,
         "type": "shell",
-        "command": "ninja -C build -t clean",
+        "command": "meson setup --wipe build",
         "args": [],
         "options": {
             "statusbar": { "hide" : true },
@@ -110,10 +111,9 @@
             }
         }
         ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+        "group": {
+            "kind": "build",
+            "isDefault": true
         }
-        ]
+    }]
 }
