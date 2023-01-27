@@ -147,6 +147,7 @@ sourcefiles       = [
 	# manual insert of Creator_PostBuild stripped files
 	CREATOR_DIR + '/gcc/startup_psoc6_01_cm4.S',
 	CREATOR_DIR + '/system_psoc6_cm4.c',
+	CREATOR_DIR + '/Generated_Source/PSoC6/cyfitter_cfg_otx.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
 	'source/OnethinxCore/OnethinxCore01.c',
 	'source/main.c',
