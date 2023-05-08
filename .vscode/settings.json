@@ -3,24 +3,25 @@
   "ego.power-tools": {
     "commands": {
       "otx.preLaunch": {
-        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "script": "${workspaceRoot}/.vscode/meson.js",
       },
       "otx.clean": {
-        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "script": "${workspaceRoot}/.vscode/meson.js",
         "button": { "text": "$(references) Clean-Reconfigure" },
       },
       "otx.build": {
-        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "script": "${workspaceRoot}/.vscode/meson.js",
         "button": { "text": "$(file-binary) Build" },
       },
       "otx.run": {
-        "script": "${workspaceRoot}/.vscode/otxC.js",
+        "script": "${workspaceRoot}/.vscode/meson.js",
         "button": { "text": "$(debug-start) Build-and-Launch" },
       }
     }
   },
   "files.associations": {
     "project.h": "c",
-    "new.h": "c"
+    "new.h": "c",
+    "lorawan_keys.h": "c"
   }
 }

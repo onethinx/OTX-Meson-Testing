@@ -1,5 +1,5 @@
 [options]
 
 [properties]
-cross_file = ['R:\\VScode\\GIT\\OTX-Meson-Testing\\cross_gcc.build']
+cross_file = ['/Volumes/Data/VScode/GIT/OTX-Meson-Testing/cross_gcc.build']
 

@@ -39,14 +39,14 @@
  * https://github.com/onethinx/Onethinx_Creator
  *
  ********************************************************************************/
+#include "project.h"
+#include "OnethinxCore01.h"
 
-
-#include "new.h" 
 
 #include "LoRaWAN_keys.h"
 
 /* Go to ../OnethinxCore/LoRaWAN_keys.h and fill in the fields of the TTN_OTAAkeys structure */
-
+coreStatus_t 	coreStatus;
 coreConfiguration_t	coreConfig = {
 	.Join =
 	{
@@ -60,8 +60,8 @@ coreConfiguration_t	coreConfig = {
 	.TX =
 	{
 		.Confirmed = 		false,
-		.DataRate = 		DR_0,
-		.Power = 			PWR_MAX,
+		.DataRate = 		DR_5,
+		.Power = 			PWR_ATT_28dB,
 		.FPort = 			1
 	},
 	.RX =
@@ -86,7 +86,7 @@ sleepConfig_t sleepConfig =
 	.DebugON = true,
 	.sleepCores = coresBoth,
 	.wakeUpPin = wakeUpPinHigh(true),
-	.wakeUpTime = wakeUpDelay(0, 0, 0, 20), // day, hour, minute, second
+	.wakeUpTime = wakeUpDelay(0, 0, 0, 10), // day, hour, minute, second
 };
 
 /*******************************************************************************arm-none-eabi-gcc
@@ -128,22 +128,11 @@ int main(void)
 	/* send join using parameters in coreConfig, blocks until either success or MAXtries */
 	coreStatus = LoRaWAN_Join(M4_WaitDeepSleep);
 
-	/* check for successful join, flash Red LED if not joined */
-	if (!coreStatus.mac.isJoined){
-		
-		while(1) {
-			Cy_GPIO_Write(LED_B_PORT, LED_B_NUM, 0);
-			CyDelay(100);
-			Cy_GPIO_Write(LED_B_PORT, LED_B_NUM, 1);
-			CyDelay(100);
-		}
-	}
+	
 
 	/* main loop */
 	for(;;)
 	{
-		/* Blue LED on while sending*/
-		Cy_GPIO_Write(LED_B_PORT, LED_B_NUM, 1);
 
 		/* Compose a message to send */
         j=0;
@@ -163,7 +152,10 @@ int main(void)
         coreStatus = LoRaWAN_Send(TXbuffer, j, M4_WaitDeepSleep);
 
 		/* Turn led off before sleep */
-		Cy_GPIO_Write(LED_B_PORT, LED_B_NUM, 0);
+		if (coreStatus.mac.bytesToRead > 0)
+		{
+			LoRaWAN_GetRXdata(TXbuffer, coreStatus.mac.bytesToRead);
+		}
 
 		/* Sleep before sending next message, wake up with a button as well */
 		LoRaWAN_Sleep(&sleepConfig);

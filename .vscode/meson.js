@@ -25,74 +25,65 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+function getDate() {
+    const d_t = new Date();
+    let year = d_t.getFullYear();
+    let month = ("0" + (d_t.getMonth() + 1)).slice(-2);
+    let day = ("0" + d_t.getDate()).slice(-2);
+    let hour = ("0" + d_t.getHours()).slice(-2);
+    let minute = ("0" + d_t.getMinutes()).slice(-2);
+    let seconds = ("0" + d_t.getSeconds()).slice(-2);
+    return year + "-" + month + "-" + day + "_" + hour + "-" + minute + "-" + seconds;
+}
 
-otxPreLaunch = async () => {
-    var ret = await executeTask("Meson: build");
-    if (ret == 0) return '';
-    vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
-    vscode.commands.executeCommand('workbench.action.problems.focus');
-    //await vscode.commands.executeCommand('workbench.panel.output.focus', 'Adapter Output');
-    return null;
-};
-
-otxPreLaunchOLD = async () => {
-    //var ret = await vscode.commands.executeCommand("mesonbuild.build", "");
-    var ret = null;
-    ret = await runMesonBuild(vscode.workspace.workspaceFolders[0].uri.path, "Debug");
-
-     if (ret == '0') return '';
-     // vscode.commands.executeCommand('workbench.panel.output.focus', 'Adapter Output');
-      return null;
-
-    // if (ret == 0) 
-    // {
-    //      vscode.commands.executeCommand('workbench.panel.output.focus', 'Adapter Output');
-    //     return '';
-    // }
-    // //var ret2 = JSON.stringify(ret);
-    // vscode.commands.executeCommand('workbench.action.problems.focus');
-    // vscode.window.showErrorMessage("Your Onethinx code didn't built well...\n\nTry some more :-)", { modal: true });
-    // return null;
-};
+// otxPreLaunch = async () => {
+//     var ret = await executeTask("Meson: build");
+//     if (ret == 0) return '';
+//     vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
+//     vscode.commands.executeCommand('workbench.action.problems.focus');
+//     //await vscode.commands.executeCommand('workbench.panel.output.focus', 'Adapter Output');
+//     return null;
+// };
 
 otxClean = async () => {
-    let { status, basePath } = await checkSetup();
-    // if (status == 'error') 
-    // {
-    //     vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
-    //     return null;
-    // }
-   // if (status == 'configured') return '';
-    let sourcePath = path.join(basePath, "source");
-    const mesonBuildFile = path.join(basePath, "meson.build");
-    if (!fs.existsSync(mesonBuildFile))
+    let { status, message, basePath } = await checkSetup();
+    var buildFolder = path.join(basePath, "build");
+    var ret = 0;
+    if (status == 'error')
     {
-        vscode.window.showErrorMessage("meson.build file not found!");
+        vscode.window.showErrorMessage(message);
         return null;
     }
-    var headerContents = readDirectory(basePath, [], sourcePath, '.h', true);
-    var sourceContents = readDirectory(basePath, [], sourcePath, '.c', false);
-
-    updateMeson(mesonBuildFile, headerContents, sourceContents);
-    var ret = 0;
-    //vscode.window.showErrorMessage("a!"+ status);
-    if (status == 'missing') await fs.promises.mkdir(path.join(basePath, "build"));
-    if (status == 'empty')
-        ret = await executeTask("Meson: wipe");
-    else if (status == 'missing' || status == 'invalid')
-        ret = await executeTask("Meson: configure");
-    else 
-        ret = await executeTask("Meson: clean-reconfigure");
+    else if (status == 'missing') await fs.promises.mkdir(buildFolder);
+    else
+    {
+        var backupFolder = path.join(buildFolder, "backup");
+        var nowFolder = path.join(backupFolder, getDate());
+        if (!fs.existsSync(backupFolder)) await fs.promises.mkdir(backupFolder);
+        fs.readdirSync(buildFolder).forEach(file => {
+            let current = path.join(buildFolder, file);
+            if (fs.statSync(current).isFile()) {
+                if(current.endsWith(".elf") || current.endsWith(".hex") || current.endsWith(".txt") || current.endsWith(".json")) {
+                    if (!fs.existsSync(nowFolder)) fs.promises.mkdir(nowFolder);
+                    var destFile =  path.join(nowFolder, file);
+                    fs.promises.copyFile(current, destFile); 
+                }
+            } 
+            if (file != 'backup')
+               fs.rmSync(current, { recursive: true, force: true });
+        });
+    }
+    ret = await executeTask("Meson: configure");
     if (ret == 0) return '';
     vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));
     return null;
 };
 
 otxBuild = async () => {
-    let { status, basePath } =  await checkSetup();
+    let { status, message, basePath } =  await checkSetup();
     if (status != 'ok') 
     {
-        vscode.window.showErrorMessage("The build task terminated with exit code: " + status + ".\r\nPlease Clean-Reconfigure.", { modal: true });
+        vscode.window.showErrorMessage("The build task terminated with exit code: " + status + "\r\nPlease Clean-Reconfigure.", { modal: true });
         return null;
     }
     let sourcePath = path.join(basePath, "source");
@@ -135,108 +126,6 @@ async function executeTask(taskName)
     });
 }
 
-async function executeBuildTask() {
-    var problemMatchers = [{
-        owner: "linker1",
-        severity: "error",
-        fileLocation : "absolute",
-        pattern: {
-           regexp: "(\\S*\\.cp{0,2}):(\\d*):\\s(undefined reference to \\S*')",
-           file: 1,
-           line: 2,
-           message: 3
-        }
-    }];
-    let buildTask = 
-    new vscode.Task(
-        { type: 'shell' },
-        vscode.TaskScope.Workspace,
-        'Build',
-        'Meson',
-        new vscode.ShellExecution('ninja -C build'),
-        problemMatchers
-    );
-
-    //buildTask.presentationOptions.clear = clearTerminalOutput;
-   // buildTask.presentationOptions.showReuseMessage = true;
-    const buildTaskExecution = await vscode.tasks.executeTask(buildTask);
-    return new Promise((resolve) => {
-        vscode.tasks.onDidEndTaskProcess(e => {
-            if (e.execution === buildTaskExecution || e.execution.task === buildTask) 
-                resolve(e.exitCode);
-        });
-    });
-
-    // const execution =  vscode.tasks.executeTask(
-    //     new vscode.Task(
-    //       { type: 'Build' },
-    //       vscode.TaskScope.Workspace,
-    //       'Build',
-    //       'Debug',
-    //       new vscode.ShellExecution('ninja -C build'),
-    //     ),
-    //   );
-    // return new Promise(resolve => {
-    //     let disposable = vscode.tasks.onDidEndTask(e => {
-    //         if (e.execution.task.group === vscode.TaskGroup.Build) {
-    //             vscode.window.showErrorMessage("Your Onethinx code didn't built well...\n\nTry some more :-)", { modal: true });
-    //             disposable.dispose();
-    //             resolve();
-    //         }
-    //     });
-    // });
-}
-
-async function executeCleanTask() {
-    let buildTask = 
-    new vscode.Task(
-        { type: 'Meson Build' },
-        vscode.TaskScope.Workspace,
-        'Meson Build',
-        'Meson Build',
-        new vscode.ShellExecution('ninja -C build -t clean'),
-      );
-        const buildTaskExecution = await vscode.tasks.executeTask(buildTask);
-        return new Promise((resolve) => {
-            vscode.tasks.onDidEndTaskProcess(e => {
-                if (e.execution === buildTaskExecution || e.execution.task === buildTask) 
-                    resolve(e.exitCode);
-            });
-        });
-}
-
-async function getBuildTasks() {
-    return new Promise<vscode.Task(resolve => {
-        vscode.tasks.fetchTasks().then((tasks) => {
-            resolve(tasks.filter((task) => task.group === vscode.TaskGroup.Build));
-        });
-    });
-}
-
-        //    vscode.window.showErrorMessage("Your Onethinx code didn't built well...\n\nTry some more :-)", { modal: true });
-//                // if (ret == 0) 
-//     {
-//         //vscode.commands.executeCommand('workbench.action.problems.focus');
-//         //vscode.commands.executeCommand('workbench.panel.output.focus', 'Git');
-//         //vscode.commands.executeCommand('workbench.action.focusPanel', 'Problems');
-//        // return '';
-//     }
-//     //vscode.commands.executeCommand('workbench.action.problems.focus');
-//     //const output2 = logging.channelManager.get('CMake/Build');
-
-//     //vscode.window.showErrorMessage("1" + output2 );
-//     sleep(2000);
-//   //    vscode.window.showErrorMessage("Your Onethinx code didn't built well...\n\nTry some more :-)");
-//   if (output == null) output = vscode.window.createOutputChannel('OTX5');
-//    vscode.commands.executeCommand('workbench.panel.output.focus', 'OTX3');
-//        output.show();
-//         output.clear();
-//         output.appendLine(JSON.stringify(ret));
-//         sleep(2000);
-//         output.show();
-//     return null;
-
-
 otxRun = async () => {
     //var ret = await vscode.commands.executeCommand('workbench.action.debug.run');
     //var ret = await vscode.commands.executeCommand('workbench.action.debug.selectandstart');
@@ -256,24 +145,17 @@ async function checkSetup()
     if(vscode.workspace.workspaceFolders === undefined)
     {
         vscode.window.showErrorMessage("No workspace opened!");
-        return { 'status': 'error', 'basePath': basePath };
+        return { 'status': 'error', 'message': "No workspace opened!", 'basePath': basePath };
     }
     basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     buildDir = path.join(basePath, "build");
-    if (!fs.existsSync(buildDir)) return { 'status': 'missing', 'basePath': basePath };
-    if (!fs.existsSync(path.join(buildDir, "meson-private"))) return { 'status': 'invalid', 'basePath': basePath };
-    if (!fs.existsSync(path.join(buildDir, "meson-info"))) return { 'status': 'empty', 'basePath': basePath };
-    if (!fs.existsSync(path.join(buildDir, "build.ninja"))) return { 'status': 'unconfigured', 'basePath': basePath };
-    // {
-    //     if (!fs.existsSync(buildDir))
-    //     {
-    //         await fs.promises.mkdir(buildDir);
-    //         return { 'status': 'empty', 'basePath': basePath };
-    //     }
-    //     //var ret = await executeTask("Meson: configure");
-    //     return { 'status': 'unconfigured', 'basePath': basePath };
-    // }
-    return { 'status': 'ok', 'basePath': basePath };
+    if (!fs.existsSync(buildDir)) return { 'status': 'missing', 'message': "Missing Build Folder", 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "meson-private"))) return { 'status': 'unconfigured', 'message': "Unconfigured Build Folder", 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "meson-info"))) return { 'status': 'unconfigured', 'message': "Unconfigured Build Folder", 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "meson-logs"))) return { 'status': 'unconfigured', 'message': "Unconfigured Build Folder", 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "build.ninja"))) return { 'status': 'unconfigured', 'message': "Unconfigured Build Folder", 'basePath': basePath };
+    if (!fs.existsSync(path.join(buildDir, "compile_commands.json"))) return { 'status': 'unconfigured', 'message': "Unconfigured Build Folder", 'basePath': basePath };
+    return { 'status': 'ok', 'message': "OK", 'basePath': basePath };
 }
 
 function writeFile(fileName, contents)
@@ -339,71 +221,6 @@ function updateMeson(mesonFile, headerContents, sourceContents) {
 	writeFile(mesonFile, contents);
 }
 
-
-
-
-async function runMesonBuild(buildDir, name) {
-
-    try {
-        let buildTask = await getTask("build", name);
-        const buildTaskExecution = await vscode.tasks.executeTask(buildTask);
-        return new Promise((resolve) => {
-            vscode.tasks.onDidEndTaskProcess(e => {
-                if (e.execution === buildTaskExecution || e.execution.task === buildTask) 
-                    resolve(e.exitCode);
-            });
-        });
-        
-    } catch (e) {
-        //vscode.window.showErrorMessage(ret);
-      // vscode.window.showErrorMessage(`Could not build ${name}`);
-     // console.log(`Building target ${name}:`);
-      //console.log(e);
-      //getOutputChannel().show(true);
-      return new Promise((resolve, reject) => reject(e));
-    }
-    
-   // await new Promise((resolve) => {
-   //     emitter.on("terminated", (code) => resolve(code));
-   // });
-  }
-
-// async function runMesonBuild2(vscode, buildDir, name) {
-//     // emitter used to detect task completition
-//     var emitter = new EventEmitter();
-//     try {
-//         let buildTask = await getTask(vscode, "build", name);
-//         const buildTaskExecution = await vscode.tasks.executeTask(buildTask);
-
-//         vscode.tasks.onDidEndTaskProcess(e => {
-//             if (e.execution === buildTaskExecution || e.execution.task === buildTask) {
-//                 vscode.window.showErrorMessage(`Detected that my task exited with exit code ${e.exitCode}`);
-//                 emitter.emit("terminated", e.exitCode);
-//                 isBuilding = false;
-//             }
-//         });
-//     } catch (e) {
-//         //vscode.window.showErrorMessage(ret);
-//        vscode.window.showErrorMessage(`Could not build ${name}`);
-//       console.log(`Building target ${name}:`);
-//       console.log(e);
-//       getOutputChannel().show(true);
-//       return false;
-//     }
-//     await new Promise((resolve) => {
-//         emitter.on("terminated", (code) => resolve(code));
-//     });
-//   }
-
-  async function getTask(mode, name) {
-    const tasks = await vscode.tasks.fetchTasks({ type: "meson" });
-    const filtered = tasks.filter(
-      t => t.definition.mode === mode && (!name || t.definition.target === name)
-    );
-    if (filtered.length === 0)
-      throw new Error(`Cannot find ${mode} target ${name}.`);
-    return filtered[0];
-  }
 
 // https://raw.githubusercontent.com/usernamehw/vscode-commands/master/src/substituteVariables.ts
 // https://github.com/microsoft/vscode/blob/main/src/vs/workbench/services/configurationResolver/common/variableResolver.ts

@@ -18,7 +18,7 @@ endian     = 'little'
 creatorPostBuildVersion = '2.10'
 
 # Creator_PostBuild_DateTime_Line - automatic insert of Creator Generated DateTime. Do not edit the line below
-creatorGeneratedDateTime = '2023-01-26 16:54:35'
+creatorGeneratedDateTime = '2023-01-31 13:48:04'
 
 # Creator_PostBuild_devicePart_Line - automatic insert of device part by Creator_PostBuild. Do not edit the line below
 devicePart = 'CY8C6347BZI-BLD53'
@@ -41,10 +41,10 @@ creatorDirectory = 'Onethinx_Creator.cydsn'
 PROJECTNAME = 'OTX-Meson-Testing'
 
 # OTX_Extension_print(ONETHINX_PACK_LOC = '${env:ONETHINX_PACK_LOC}')
-ONETHINX_PACK_LOC = 'C:/VSCode_OnethinxPack_Windows'
+ONETHINX_PACK_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS'
 
 # OTX_Extension_print(ONETHINX_TOOLS_LOC = '${env:ONETHINX_TOOLS_LOC}')
-ONETHINX_TOOLS_LOC = 'C:/VSCode_OnethinxPack_Windows/tools_3.0'
+ONETHINX_TOOLS_LOC = '/Volumes/Data/VScode/GIT/VSCode_OnethinxPack_macOS/tools_3.0'
 
 CONFIG_DIR = ONETHINX_PACK_LOC + '/config'
 MESON_SOURCE_LOC = meson.current_source_dir()
@@ -112,7 +112,6 @@ linker_args     = [
 
 include_dirs       = [
 # OTX_Extension_HeaderFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
-	'source',
 	'source/OnethinxCore',
 # OTX_Extension_HeaderFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_IncludeFolders_Start - automatic insert of include header folders by Creator_PostBuild. Do not edit below this line
@@ -149,8 +148,8 @@ sourcefiles       = [
 	CREATOR_DIR + '/system_psoc6_cm4.c',
 	CREATOR_DIR + '/Generated_Source/PSoC6/cyfitter_cfg_otx.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
-	'source/main.c',
 	'source/OnethinxCore/OnethinxCore01.c',
+	'source/main.c',
 # OTX_Extension_SourceFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_SourceFiles_Start - automatic insert of source files by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_sysint_cfg.c',
