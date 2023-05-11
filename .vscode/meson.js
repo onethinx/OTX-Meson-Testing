@@ -73,6 +73,9 @@ otxClean = async () => {
                fs.rmSync(current, { recursive: true, force: true });
         });
     }
+
+	const mesonBuildFile = path.join(basePath, "meson.build");
+    await updateMeson(mesonBuildFile, [], []);
     ret = await executeTask("Meson: configure");
     if (ret == 0) return '';
     vscode.window.showErrorMessage("The build task terminated with exit code:" + JSON.stringify(ret));

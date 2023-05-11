@@ -112,7 +112,6 @@ linker_args     = [
 
 include_dirs       = [
 # OTX_Extension_HeaderFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
-	'source/OnethinxCore',
 # OTX_Extension_HeaderFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_IncludeFolders_Start - automatic insert of include header folders by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6',
@@ -148,8 +147,6 @@ sourcefiles       = [
 	CREATOR_DIR + '/system_psoc6_cm4.c',
 	CREATOR_DIR + '/Generated_Source/PSoC6/cyfitter_cfg_otx.c',
 # OTX_Extension_SourceFiles_Start - automatic insert of source files by the OTX VSCode extension. Do not edit below this line
-	'source/OnethinxCore/OnethinxCore01.c',
-	'source/main.c',
 # OTX_Extension_SourceFiles_End - automatic insert of source files by the OTX VSCode extension. Do not edit above this line
 # Creator_PostBuild_SourceFiles_Start - automatic insert of source files by Creator_PostBuild. Do not edit below this line
 	'Onethinx_Creator.cydsn/Generated_Source/PSoC6/cyfitter_sysint_cfg.c',
